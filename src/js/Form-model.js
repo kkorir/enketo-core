@@ -10,6 +10,8 @@ define( function( require, exports, module ) {
     var $ = require( 'jquery' );
     var Promise = require( 'lie' );
     var FormLogicError = require( './Form-logic-error' );
+    var ExtendedXpathEvaluator = require('extended-xpath');
+    var openrosa_xpath_extensions = require( 'openrosa-xpath-extensions');
     require( './plugins' );
     require( './extend' );
     require( 'jquery-xpath-basic' );
@@ -636,7 +638,8 @@ define( function( require, exports, module ) {
     };
 
     /**
-     * Evaluates an XPath Expression using XPathJS_javarosa (not native XPath 1.0 evaluator)
+     * Evaluates an XPath Expression with available XPath evaluators, including
+     * javarosa extensions.
      *
      * This function does not seem to work properly for nodeset resulttypes otherwise:
      * muliple nodes can be accessed by returned node.snapshotItem(i)(.textContent)
@@ -737,7 +740,7 @@ define( function( require, exports, module ) {
             }
         }
 
-        // if that didn't work, try the slow XPathJS evaluator 
+        // if that didn't work, try the slower custom XPath JS evaluator
         if ( !result ) {
             try {
                 if ( typeof doc.jsEvaluate === 'undefined' ) {
