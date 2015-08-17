@@ -9,7 +9,6 @@ define( function( require, exports, module ) {
         require( '../widget/note/notewidget' ),
         require( '../widget/select-desktop/selectpicker' ),
         require( '../widget/select-mobile/selectpicker' ),
-        require( '../widget/geo/geopicker' ),
         require( '../widget/table/tablewidget' ),
         require( '../widget/radio/radiopicker' ),
         require( '../widget/date/datepicker-extended' ),
