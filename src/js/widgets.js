@@ -14,6 +14,10 @@ define( function(require, exports, module){
         _getWidgetConfigs, _getElements, _instantiate, _load, _setLangChangeHandler, _setOptionChangeHandler,
         widgets = [];
 
+    if ( typeof config === 'string' ) {
+        config = JSON.parse( config );
+    }
+
     /**
      * Initializes widgets
      *
@@ -95,7 +99,7 @@ define( function(require, exports, module){
     };
 
     /**
-     * Loads the widget configuration files (asynchronously)
+     * Loads the widget configuration files
      *
      * @param { {widgets:<string> }} config client configuration object
      * @param  {Function} callback
@@ -107,11 +111,15 @@ define( function(require, exports, module){
 
         //add widget configuration to config object and load widget config files
         for ( i = 0; i < config.widgets.length; i++ ) {
+            id = config.widgets[ i ]
+                .replace( /\/[^\/]*$/, '/config.json' );
+
             // FIXME here we have to remove the leading `.` from paths because
             // browserify maps them strangely
-            id = config.widgets[ i ]
-                    .substring(1)
-                    .replace( /\/[^\/]*$/, '/config.json' );
+            if ( id.indexOf( '.' ) === 0 ) {
+                id = id.substring( 1 );
+            }
+
             try {
                 widget = require( id );
                 widget.path = config.widgets[ i ];
