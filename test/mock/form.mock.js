@@ -3,7 +3,8 @@
  * This way they stay up to date when the XSL sheet changes!
  */
 
-var dataEditStr1 =
+module.exports = {
+dataEditStr1 :
     '<thedata id="something">' +
     '<meta>' +
     '<instanceID>7c990ed9-8aab-42ba-84f5-bf23277154ad</instanceID>' +
@@ -37,9 +38,9 @@ var dataEditStr1 =
     '<w2>3</w2>' +
     '<w.3>5</w.3>' +
     '</someweights>' +
-    '</thedata>';
+    '</thedata>',
 
-var dataStr2 =
+dataStr2 :
     '<model>' +
     '<instance>' +
     '<random id="random"><formhub><uuid/></formhub>' +
@@ -54,9 +55,9 @@ var dataStr2 =
     '</meta>' +
     '</random>' +
     '</instance>' +
-    '</model>';
+    '</model>',
 
-var formStr2 =
+formStr2 :
     '<form class="or" autocomplete="off" id="random">' +
     '<section class="form-logo"> </section>' +
     '<h2 id="form-title">Random<span></span></h2>' +
@@ -88,9 +89,9 @@ var formStr2 =
     '<input name="/random/uuid__" type="hidden" data-calculate="uuid()" data-type-xml="string"/>' +
     '</label>' +
     '</fieldset>' +
-    '</form>';
+    '</form>',
 
-var dataStr3 =
+dataStr3 :
     '<model>' +
     '<instance xmlns="http://www.w3.org/2002/xforms">' +
     '<random id="random"><formhub><uuid/></formhub>' +
@@ -103,9 +104,9 @@ var dataStr3 =
     '</meta>' +
     '</random>' +
     '</instance>' +
-    '</model>';
+    '</model>',
 
-var formStr3 =
+formStr3 :
     '<form class="or">' +
     '<section class="form-logo"> </section>' +
     '<h2 id="form-title">Random<span></span></h2>' +
@@ -148,9 +149,9 @@ var formStr3 =
     '<input name="/random/uuid__" type="hidden" data-calculate="uuid()" data-type-xml="string"/>' +
     '</label>' +
     '</fieldset>' +
-    '</form>';
+    '</form>',
 
-var dataStr4 =
+dataStr4 :
     '<model>' +
     '<instance>' +
     '<nodename_bug id=\"nodename_bug\"><formhub><uuid>70bdb2dd3cf144288a6a00b36399ed79</uuid></formhub>' +
@@ -160,9 +161,9 @@ var dataStr4 =
     '<meta><instanceID></instanceID></meta>' +
     '</nodename_bug>' +
     '</instance>' +
-    '</model>';
+    '</model>',
 
-var formStr4 =
+formStr4 :
     '<form class="or" id="nodename_bug">' +
     '<section class="form-logo"> </section>' +
     '<h2 id="form-title">Node Name bug (issue 169)</h2>' +
@@ -172,9 +173,9 @@ var formStr4 =
     '<fieldset id="or-calculated-items" style="display:none;"><label class="question">' +
     '<input name="/nodename_bug/formhub/uuid" type="hidden" data-calculate="uuid()" data-type-xml="string"/>' +
     '</label></fieldset>' +
-    '</form>';
+    '</form>',
 
-var dataStr5a =
+dataStr5a :
     '<model>' +
     '<instance>' +
     '<widgets id="testPreloads" version="1"  >' +
@@ -199,9 +200,9 @@ var dataStr5a =
     '</meta>' +
     '</widgets>' +
     '</instance>' +
-    '</model>';
+    '</model>',
 
-var dataStr5b =
+dataStr5b :
     '<model>' +
     '<instance>' +
     '<widgets id="testPreloads" version="1"  >' +
@@ -226,9 +227,9 @@ var dataStr5b =
     '</meta>' +
     '</widgets>' +
     '</instance>' +
-    '</model>';
+    '</model>',
 
-var formStr5 =
+formStr5 :
     '<form class="or" id="testPreloads">' +
     '<section class="form-logo"></section>' +
     '<h2 id="form-title">Test: Preloads JavaRosa</h2>' +
@@ -272,9 +273,9 @@ var formStr5 =
     '<input name="/widgets/meta/instanceID" type="hidden" data-preload="instance" data-preload-params="" data-type-xml="string"/>' +
     '</label>' +
     '</fieldset>' +
-    '</form>';
+    '</form>',
 
-var dataStr6 =
+dataStr6 :
     '<model>' +
     '<instance>' +
     '<data id="TestGroupBranch" version="3">' +
@@ -285,9 +286,9 @@ var dataStr6 =
     '<nodeC/>' +
     '</data>' +
     '</instance>' +
-    '</model>';
+    '</model>',
 
-var formStr6 =
+formStr6 :
     '<form class="or" id="TestGroupBranch">' +
     '<div id="form-languages" style="display:none;" data-default-lang="">' +
     '<a href="#" lang="en">' +
@@ -316,9 +317,9 @@ var formStr6 =
     '<option value="b">option 3</option>' +
     '</select>' +
     '</label>' +
-    '</form>';
+    '</form>',
 
-var dataStr7 =
+dataStr7 :
     '<model>' +
     '<instance>' +
     '<data>' +
@@ -329,9 +330,9 @@ var dataStr7 =
     '</group>' +
     '</data>' +
     '</instance>' +
-    '</model>';
+    '</model>',
 
-var formStr7 =
+formStr7 :
     '<form class="or">' +
     '<fieldset class="or-group or-branch pre-init" name="/data/group" data-relevant="/data/nodeA > 0">' +
     '<label class="question or-branch pre-init">' +
@@ -339,9 +340,9 @@ var formStr7 =
     '<input name="/data/group/nodeC" type="number" data-type-xml="int" data-relevant="/data/nodeB > 0">' +
     '</label>' +
     '</fieldset>' +
-    '</form>';
+    '</form>',
 
-var dataEditStr_nested_repeats =
+dataEditStr_nested_repeats :
     '<nested_repeats id="nested_repeats">' +
     '<formhub>' +
     '<uuid>f19b44ccf710492eb4d1ed6f468324f1</uuid>' +
@@ -378,4 +379,5 @@ var dataEditStr_nested_repeats =
     '</kids>' +
     '<gps>-1.2627107 36.7925771 0.0 37.5</gps>' +
     '<web_browsers>firefox chrome safari</web_browsers>' +
-    '</nested_repeats>';
+    '</nested_repeats>'
+};
