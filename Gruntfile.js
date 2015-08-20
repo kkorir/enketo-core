@@ -110,7 +110,7 @@ module.exports = function( grunt ) {
                 files: { 'build/js/enketo.grunt.js': ['app.js'] },
             },
             options: {
-                alias: browserify_aliases(),
+                alias: {},
             },
         },
         uglify: {
@@ -120,12 +120,6 @@ module.exports = function( grunt ) {
         },
     } );
 
-    function browserify_aliases() {
-        var aliases = {
-            'widgets' : appConfig["widgets module"] || './src/js/widgets'
-        };
-        return aliases;
-    }
 
     grunt.registerTask( 'prepWidgetSass', 'Preparing _widgets.scss dynamically', function() {
         var widgetSassPath,

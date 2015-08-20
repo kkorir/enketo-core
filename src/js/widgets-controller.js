@@ -8,7 +8,9 @@ define( function(require, exports, module){
     var config = require('text!enketo-config');
     var support = require('./support');
     var $ = require('jquery');
-    var widgets = require('widgets');
+    var widgets = require('./widgets').filter(function(widget){
+        return widget.selector;
+    });
     var $form, init, enable, disable, destroy,
         _getWidgets, _getElements, _instantiate, _load, _setLangChangeHandler, _setOptionChangeHandler;
 
@@ -114,10 +116,6 @@ define( function(require, exports, module){
         var $elements;
         widget.options = widget.options || {};
         widget.options.touch = support.touch;
-
-        if ( !widget.selector ) {
-            return console.log( 'css-only widget', widget );
-        }
 
         if (!widget.name){
             return console.error('widget doesn\'t have a name');
