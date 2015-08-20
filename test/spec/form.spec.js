@@ -1,6 +1,6 @@
 var Form = require('../../src/js/Form');
 var mockForms1 = require('../mock/transforms.mock');
-var mockForms2 = require('../mock/form.mock.js');
+var mockForms2 = require('../mock/form.mock');
 
     var loadForm = function( filename, editStr ) {
         var strings = mockForms1[ filename ];
