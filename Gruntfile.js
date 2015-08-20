@@ -122,7 +122,7 @@ module.exports = function( grunt ) {
 
     function browserify_aliases() {
         var aliases = {
-            'widgetss' : appConfig["widgets module"] || './src/js/widgetss'
+            'widgets' : appConfig["widgets module"] || './src/js/widgets'
         };
         return aliases;
     }
