@@ -7,12 +7,10 @@ define( function(require, exports, module){
     'use strict';
     var config = require('text!enketo-config');
     var support = require('./support');
-    var Q = require('q');
     var $ = require('jquery');
-
+    var widgets = require('widgetss');
     var $form, init, enable, disable, destroy,
-        _getWidgetConfigs, _getElements, _instantiate, _load, _setLangChangeHandler, _setOptionChangeHandler,
-        widgets = [];
+        _getWidgets, _getElements, _instantiate, _load, _setLangChangeHandler, _setOptionChangeHandler;
 
     if ( typeof config === 'string' ) {
         config = JSON.parse( config );
@@ -28,12 +26,9 @@ define( function(require, exports, module){
         $form = $( 'form.or' );
         $group = $group || $form;
 
-        _getWidgetConfigs( config )
-            .then( function( widgets ) {
-                widgets.forEach( function( widget ) {
-                    _instantiate( widget, $group );
-                } );
-            } );
+        widgets.forEach( function( widget ) {
+            _instantiate( widget, $group );
+        } );
     };
 
     /**
@@ -99,42 +94,6 @@ define( function(require, exports, module){
     };
 
     /**
-     * Loads the widget configuration files
-     *
-     * @param { {widgets:<string> }} config client configuration object
-     * @param  {Function} callback
-     */
-    _getWidgetConfigs = function( config ) {
-        var i, id, widget,
-            deferred = Q.defer(),
-            widgetConfigFiles = [];
-
-        //add widget configuration to config object and load widget config files
-        for ( i = 0; i < config.widgets.length; i++ ) {
-            id = config.widgets[ i ]
-                .replace( /\/[^\/]*$/, '/config.json' );
-
-            // FIXME here we have to remove the leading `.` from paths because
-            // browserify maps them strangely
-            if ( id.indexOf( '.' ) === 0 ) {
-                id = id.substring( 1 );
-            }
-
-            try {
-                widget = require( id );
-                widget.path = config.widgets[ i ];
-                widgets.push( widget );
-            } catch( e ) {
-                console.log( 'Error loading widget "' + id + '": ' + e );
-            }
-        }
-
-        deferred.resolve( widgets );
-
-        return deferred.promise;
-    };
-
-    /**
      * Returns the elements on which to apply the widget
      *
      * @param  {jQuery} $group   a jQuery-wrapped element
@@ -152,62 +111,29 @@ define( function(require, exports, module){
      * @param  {jQuery} $group The elements inside which widgets need to be created.
      */
     _instantiate = function( widget, $group ) {
+        var $elements;
+        widget.options = widget.options || {};
+        widget.options.touch = support.touch;
 
-        //don't let an error loading one widget affect the others
-        try {
-            var $elements;
-            widget.options = widget.options || {};
-            widget.options.touch = support.touch;
-
-            if ( !widget.selector && widget.selector !== null ) {
-                return console.error( 'widget configuration has no acceptable selector property', widget );
-            }
-
-            $elements = _getElements( $group, widget.selector );
-
-            if ( !$elements.length ) {
-                return;
-            }
-
-            if ( !widget.load ) {
-                widget.load = _load( widget );
-            }
-
-            widget.load
-                .then( function( widget ) {
-                    // if the widget is not a css-only widget
-                    if ( widget.name ) {
-                        $elements[ widget.name ]( widget.options );
-                        _setLangChangeHandler( widget, $elements );
-                        _setOptionChangeHandler( widget, $elements );
-                    }
-                } );
-        } catch ( loadingError ) {
-            console.log( 'Error loading widget ' + widget.path + ': ' + loadingError );
+        if ( !widget.selector ) {
+            return console.log( 'css-only widget', widget );
         }
+
+        if (!widget.name){
+            return console.error('widget doesn\'t have a name');
+        }
+
+        $elements = _getElements( $group, widget.selector );
+
+        if ( !$elements.length ) {
+            return;
+        }
+
+        $elements[ widget.name ]( widget.options );
+        _setLangChangeHandler( widget, $elements );
+        _setOptionChangeHandler( widget, $elements );
     };
 
-    /**
-     * Loads a widget module.
-     *
-     * @param  {[type]} widget [description]
-     * @return {[type]}        [description]
-     */
-    _load = function( widget ) {
-        var deferred, widgetName;
-
-        deferred = Q.defer();
-
-        // FIXME we have to remove the leading `.` from widget path because
-        // browserify maps paths strangely
-        widgetName = require( widget.path.substring(1) + '.js' );
-        widget.name = widgetName;
-        deferred.resolve( widget );
-
-        console.log( 'Loaded widget: ' + widgetName );
-
-        return deferred.promise;
-    };
 
     /**
      * Calls widget('update') when the language changes. This function is called upon initialization,
