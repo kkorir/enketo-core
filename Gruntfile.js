@@ -90,9 +90,6 @@ module.exports = function( grunt ) {
                 browsers: [ 'Chrome', 'ChromeCanary', 'Firefox', /*'Opera',*/ 'Safari' ]
             }
         },
-        prepWidgetSass: {
-            writePath: 'src/sass/core/_widgets.scss'
-        },
         sass: {
             compile: {
                 cwd: 'src/sass',
@@ -107,7 +104,7 @@ module.exports = function( grunt ) {
         },
         browserify: {
             standalone: {
-                files: { 'build/js/enketo.grunt.js': ['app.js'] },
+                files: { 'build/js/enketo-bundle.js': ['app.js'] },
             },
             options: {
                 alias: {},
@@ -115,30 +112,15 @@ module.exports = function( grunt ) {
         },
         uglify: {
             standalone: {
-                files: { 'build/js/enketo.grunt.min.js': [ 'build/js/enketo.grunt.js' ] },
+                files: { 'build/js/enketo-bundle.min.js': [ 'build/js/enketo-bundle.js' ] },
             },
         },
     } );
 
-
-    grunt.registerTask( 'prepWidgetSass', 'Preparing _widgets.scss dynamically', function() {
-        var widgetSassPath,
-            config = grunt.config( 'prepWidgetSass' ),
-            content = '// Dynamically created list of widget stylesheets to import based on the content\r\n' +
-            '// based on the content of config.json\r\n\r\n';
-
-        appConfig.widgets.forEach( function( widget ) {
-            widgetSassPath = widget.replace( /^\.\/src\//, '../../' ) + '.scss';
-            content += '@import "' + widgetSassPath + '";\r\n';
-        } );
-
-        grunt.file.write( config.writePath, content );
-    } );
-
     grunt.registerTask( 'compile', [ 'browserify', 'uglify' ] );
     grunt.registerTask( 'test', [ /*'jsbeautifier:test',*/ 'jshint', 'compile', 'karma:headless' ] );
-    grunt.registerTask( 'style', [ 'prepWidgetSass', 'sass' ] );
+    grunt.registerTask( 'style', ['sass' ] );
     grunt.registerTask( 'server', [ 'connect:server:keepalive' ] );
     grunt.registerTask( 'develop', [ 'concurrent:develop' ] );
-    grunt.registerTask( 'default', [ 'prepWidgetSass', 'sass', 'compile' ] );
+    grunt.registerTask( 'default', ['style', 'compile' ] );
 };

@@ -8,7 +8,7 @@ define( function(require, exports, module){
     var config = require('text!enketo-config');
     var support = require('./support');
     var $ = require('jquery');
-    var widgets = require('./widgets').filter(function(widget){
+    var widgets = require('widgets').filter(function(widget){
         return widget.selector;
     });
     var $form, init, enable, disable, destroy,
