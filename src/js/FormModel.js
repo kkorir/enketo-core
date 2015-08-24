@@ -11,7 +11,7 @@ define( function(require, exports, module){
     var $ = require('jquery');
     require('./plugins');
     require('./extend');
-    require('jquery.xpath');
+    require('jquery-xpath-basic');
 
     var FormModel, Nodeset, types;
 
