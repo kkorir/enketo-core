@@ -44,7 +44,6 @@
     "text!enketo-config": "./config.json",
     "merge-xml": "./lib/bower-components/mergexml/mergexml.js",
     "xpath": "./lib/xpath/build/enketo-xpathjs.js",
-    "leaflet": "./lib/bower-components/leaflet/dist/leaflet.js",
     "bootstrap-slider": "./lib/bootstrap-slider/js/bootstrap-slider.js",
     "widgets": "./src/js/widgets.js"
   },
@@ -58,6 +57,7 @@
     "jquery": "2.1.x",
     "jquery-touchswipe": "1.6.x",
     "jquery-xpath-basic": "1.0.x",
+    "leaflet": "0.7.x",
     "q": "1.4.x"
   }
 }
