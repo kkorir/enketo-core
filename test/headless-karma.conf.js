@@ -36,9 +36,6 @@ module.exports = function( config ) {
                 pattern: 'lib/jquery-touchswipe/jquery.touchSwipe.js',
                 included: false
             }, {
-                pattern: 'lib/jquery-xpath/jquery.xpath.js',
-                included: false
-            }, {
                 pattern: 'lib/text/text.js',
                 included: false
             }, {
@@ -49,12 +46,6 @@ module.exports = function( config ) {
                 included: false
             }, {
                 pattern: 'lib/xpath/build/enketo-xpathjs.js',
-                included: false
-            }, {
-                pattern: 'lib/bower-components/jquery/dist/jquery.js',
-                included: false
-            }, {
-                pattern: 'lib/bower-components/q/q.js',
                 included: false
             }, {
                 pattern: 'lib/bower-components/mergexml/mergexml.js',
