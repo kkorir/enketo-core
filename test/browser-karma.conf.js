@@ -33,9 +33,6 @@ module.exports = function( config ) {
                 pattern: 'src/widget/time/bootstrap3-timepicker/js/bootstrap-timepicker.js',
                 included: false
             }, {
-                pattern: 'lib/jquery-touchswipe/jquery.touchSwipe.js',
-                included: false
-            }, {
                 pattern: 'lib/text/text.js',
                 included: false
             }, {
