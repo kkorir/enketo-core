@@ -41,7 +41,6 @@
     "watchify": "^3.3.1"
   },
   "browser": {
-    "q": "./lib/bower-components/q/q.js",
     "text!enketo-config": "./config.json",
     "jquery.touchswipe": "./lib/jquery-touchswipe/jquery.touchSwipe.js",
     "merge-xml": "./lib/bower-components/mergexml/mergexml.js",
@@ -58,6 +57,7 @@
   },
   "dependencies": {
     "jquery": "2.1.x",
-    "jquery-xpath-basic": "1.0.x"
+    "jquery-xpath-basic": "1.0.x",
+    "q": "1.4.x"
   }
 }
