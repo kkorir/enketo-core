@@ -10,8 +10,8 @@ Follow the [Enketo blog](http://blog.enketo.org) or [Enketo on twitter](https://
 ### Usage as a library
 
 1. Install as a git submodule, with `npm enketo-core --save` or `bower install enketo-core --save`.
-2. Develop a way to perform an XSL Transformation on OpenRosa-flavoured XForms inside your app. The transformation will output an XML instance and a HTML form. See [enketo-transformer](https://github.com/enketo/enketo-transformer) for an example. For development purposes you may also use the free (and slow, not robust at all) API provided by Enketo LLC at [http://xslt-dev.enketo.org/](http://xslt-dev.enketo.org/transform/) (add `?xform=http://myforms.com/myform.xml` to use API).
-3. Add [themes](./src/sass) to your stylesheet build system (formhub, grid, plain).
+2. Develop a way to perform an XSL Transformation on OpenRosa-flavoured XForms inside your app. The transformation will output an XML instance and a HTML form. See [enketo-transformer](https://github.com/enketo/enketo-transformer) for an example. For development purposes you may also use the free (and slow, not robust at all) API provided by Enketo LLC at [http://xslt-dev.enketo.org/transform](http://xslt-dev.enketo.org/transform/) (add `?xform=http://myforms.com/myform.xml` to use API).
+3. Add [themes](./src/sass) to your stylesheet build system (2 stylesheets per theme, 1 is for `media="print"`).
 4. Override [config.json](./config.json) and optionally [widgets.js](./src/js/widgets.js) with your app-specific versions.
 5. Main methods illustrated in code below:
 
@@ -69,11 +69,10 @@ $( '#submit' ).on( 'click', function() {
 ### How to run to develop on enketo-core
 
 1. install [node](http://nodejs.org/) and [grunt-cli](http://gruntjs.com/getting-started)
-2. clone the repo
-3. install dependencies with `npm install`
-4. build with `grunt`
-5. start built-in auto-reloading development server with `grunt develop` 
-8. browse to [http://localhost:8005/forms/index.html](http://localhost:8005/forms/index.html)
+2. install dependencies with `npm install`
+3. build with `grunt`
+4. start built-in auto-reloading development server with `grunt develop` 
+5. browse to [http://localhost:8005/forms/index.html](http://localhost:8005/forms/index.html)
 
 ### How to create or extend widgets
 
