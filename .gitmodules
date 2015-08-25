@@ -1,6 +1,3 @@
 [submodule "lib/text"]
 	path = lib/text
 	url = https://github.com/requirejs/text.git
-[submodule "src/widget/time/bootstrap3-timepicker"]
-	path = src/widget/time/bootstrap3-timepicker
-	url = https://github.com/m3wolf/bootstrap3-timepicker.git
