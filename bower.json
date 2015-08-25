@@ -11,15 +11,11 @@
     "ODK",
     "XForm"
   ],
-  "license": "Apache2",
+  "license": "Apache-2.0",
   "private": true,
   "ignore": [
     "**/.*",
     "node_modules",
-    "bower_components",
     "test"
-  ],
-  "dependencies": {
-    "mergexml": "~1.1.0"
-  }
+  ]
 }

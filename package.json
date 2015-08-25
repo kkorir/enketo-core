@@ -41,7 +41,6 @@
   },
   "browser": {
     "text!enketo-config": "./config.json",
-    "merge-xml": "./lib/bower-components/mergexml/mergexml.js",
     "widgets": "./src/js/widgets.js"
   },
   "dependencies": {
@@ -53,6 +52,7 @@
     "jquery-touchswipe": "1.6.x",
     "jquery-xpath-basic": "1.0.x",
     "leaflet": "0.7.x",
+    "mergexml": "1.1.x",
     "q": "1.4.x"
   }
 }
