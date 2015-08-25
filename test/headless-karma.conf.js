@@ -26,10 +26,7 @@ module.exports = function( config ) {
             }, {
                 pattern: 'config.json',
                 included: false
-            }, {
-                pattern: 'lib/text/text.js',
-                included: false
-            } 
+            }
         ],
 
 

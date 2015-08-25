@@ -1,3 +1,0 @@
-[submodule "lib/text"]
-	path = lib/text
-	url = https://github.com/requirejs/text.git
