@@ -26,10 +26,7 @@ module.exports = function( config ) {
             }, {
                 pattern: 'config.json',
                 included: false
-            }, {
-                pattern: 'src/widget/date/bootstrap3-datepicker/js/bootstrap-datepicker.js',
-                included: false
-            }, {
+            },{
                 pattern: 'src/widget/time/bootstrap3-timepicker/js/bootstrap-timepicker.js',
                 included: false
             }, {
