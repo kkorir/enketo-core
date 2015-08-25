@@ -10,6 +10,3 @@ url=https://github.com/enketo/enketo-xpathjs.git
 [submodule "src/widget/date/bootstrap3-datepicker"]
 	path = src/widget/date/bootstrap3-datepicker
 	url = https://github.com/eternicode/bootstrap-datepicker.git
-[submodule "lib/bootstrap-slider"]
-	path = lib/bootstrap-slider
-url=https://github.com/enketo/bootstrap-slider.git

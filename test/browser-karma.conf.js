@@ -36,9 +36,6 @@ module.exports = function( config ) {
                 pattern: 'lib/text/text.js',
                 included: false
             }, {
-                pattern: 'lib/bootstrap-slider/js/bootstrap-slider.js',
-                included: false
-            }, {
                 pattern: 'lib/xpath/build/enketo-xpathjs.js',
                 included: false
             }, {
