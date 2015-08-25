@@ -16,7 +16,6 @@
   },
   "devDependencies": {
     "browserify": "^11.0.1",
-    "browserify-shim": "^3.8.10",
     "grunt": "0.4.x",
     "grunt-browserify": "^4.0.0",
     "grunt-concurrent": "2.x.x",
@@ -43,17 +42,11 @@
   "browser": {
     "text!enketo-config": "./config.json",
     "merge-xml": "./lib/bower-components/mergexml/mergexml.js",
-    "xpath": "./lib/xpath/build/enketo-xpathjs.js",
     "widgets": "./src/js/widgets.js"
-  },
-  "browserify": {
-    "transform": ["browserify-shim"]
-  },
-  "browserify-shim": {
-    "./lib/xpath/build/enketo-xpathjs.js": "XPathJS"
   },
   "dependencies": {
     "bootstrap-slider-basic": "^3.0.2",
+    "enketo-xpathjs": "^1.2.2",
     "jquery": "2.1.x",
     "jquery-touchswipe": "1.6.x",
     "jquery-xpath-basic": "1.0.x",

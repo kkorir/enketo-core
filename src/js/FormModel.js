@@ -5,8 +5,8 @@ if (typeof exports === 'object' && typeof exports.nodeName !== 'string' && typeo
 }
 define( function(require, exports, module){
     'use strict';
-    var XPathJS = require('xpath');
     var MergeXML = require('merge-xml');
+    var XPathJS = require('enketo-xpathjs');
     var utils = require('./utils');
     var $ = require('jquery');
     require('./plugins');
