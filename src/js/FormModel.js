@@ -569,7 +569,8 @@ define( function( require, exports, module ) {
 
                 for ( i = params.length - 1; i > 1; i -= 2 ) {
                     // The position will become an XPath predicate. The context for an XPath predicate, is not the same
-                    // as the context for the complete expression, so we have to evaluate the position separately.
+                    // as the context for the complete expression, so we have to evaluate the position separately. Otherwise 
+                    // relative paths would break.
                     position = !isNaN( params[ i ] ) ? params[ i ] : that.evaluate( params[ i ], 'number', selector, index, true );
                     positionedPath = positionedPath.replace( params[ i - 1 ], params[ i - 1 ] + '[position() = ' + position + ']' );
                 }
@@ -578,6 +579,49 @@ define( function( require, exports, module ) {
             } else {
                 console.error( 'indexed repeat with incorrect number of parameters found', indexedRepeat[ 0 ] );
                 return '"Error with indexed-repeat parameters"';
+            }
+        } );
+
+        return expr;
+    };
+
+    FormModel.prototype.replacePullDataFn = function( expr, selector, index ) {
+        var that = this;
+        var pullDatas = utils.parseFunctionFromExpression( expr, 'pulldata' );
+
+        if ( !pullDatas.length ) {
+            return expr;
+        }
+
+        pullDatas.forEach( function( pullData ) {
+            var searchValue;
+            var searchXPath;
+            var params = pullData[ 1 ].split( ',' );
+
+            if ( params.length === 4 ) {
+
+                // trim parameters
+                params = params.map( function( param ) {
+                    return param.trim();
+                } );
+
+                // strip quotes
+                params[ 1 ] = utils.stripQuotes( params[ 1 ] );
+                params[ 2 ] = utils.stripQuotes( params[ 2 ] );
+
+                // TODO: the 2nd and 3rd parameter could probably also be expressions...
+
+                // The 4th argument will become an XPath predicate. The context for an XPath predicate, is not the same
+                // as the context for the complete expression, so we have to evaluate the position separately. Otherwise
+                // relative paths would break.
+                searchValue = that.evaluate( params[ 3 ], 'string', selector, index, true );
+                searchXPath = 'instance(' + params[ 0 ] + ')/root/item[' + params[ 2 ] + ' = ' + searchValue + ']/' + params[ 1 ];
+
+                expr = expr.replace( pullData[ 0 ], searchXPath );
+
+            } else {
+                console.error( 'pulldata with incorrect number of parameters found', pullData[ 0 ] );
+                return '"Error with pulldata parameters"';
             }
         } );
 
@@ -626,10 +670,11 @@ define( function( require, exports, module ) {
         // TODO: these cache keys can get quite large. Would it be beneficial to get the md5 of the key?
         cacheKey = [ expr, selector, index, repeats ].join( '|' );
 
-        // This function needs to come before makeBugCompliant.
-        // An expression transformation with indexed-repeat cannot be cached because in 
+        // These functions need to come before makeBugCompliant.
+        // An expression transformation with indexed-repeat or pulldata cannot be cached because in 
         // "indexed-repeat(node, repeat nodeset, index)" the index parameter could be an expression.
         expr = this.replaceIndexedRepeatFn( expr, selector, index );
+        expr = this.replacePullDataFn( expr, selector, index );
         cacheable = ( original === expr );
 
         // if no cached conversion exists

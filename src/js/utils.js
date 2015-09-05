@@ -41,7 +41,15 @@ define( function( require, exports, module ) {
         return results;
     }
 
+    function stripQuotes( str ) {
+        if ( /^".+"$/.test( str ) || /^'.+'$/.test( str ) ) {
+            return str.substring( 1, str.length - 1 );
+        }
+        return str;
+    }
+
     module.exports = {
-        parseFunctionFromExpression: parseFunctionFromExpression
+        parseFunctionFromExpression: parseFunctionFromExpression,
+        stripQuotes: stripQuotes,
     };
 } );
