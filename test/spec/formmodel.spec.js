@@ -452,12 +452,14 @@ describe( 'converting indexed-repeat() ', function() {
 
 describe( 'converting pulldata() ', function() {
     [
-        [ 'pulldata (\'hhplotdata\', \'plot1size\', \'hhid_key\', 2)', 'instance(\'hhplotdata\`)/root/item[hhid_key = 2]/plot1size' ],
-        [ 'pulldata (\'hhplotdata\', \'plot1size\', \'hhid_key\', \'two\')', 'instance(\'hhplotdata\`)/root/item[hhid_key = \'two\']/plot1size' ],
-        // TODO: 4th paramater is path/to/node
+        [ 'pulldata(\'hhplotdata\', \'plot1size\', \'hhid_key\', 2)', 'instance(\'hhplotdata\')/root/item[hhid_key = 2]/plot1size' ],
+        [ 'pulldata( \'hhplotdata\', \'plot1size\', \'hhid_key\' , 2 )', 'instance(\'hhplotdata\')/root/item[hhid_key = 2]/plot1size' ],
+        [ 'pulldata(\'hhplotdata\', \'plot1size\', \'hhid_key\', \'two\')', 'instance(\'hhplotdata\')/root/item[hhid_key = \'two\']/plot1size' ],
+        [ 'pulldata(\'hhplotdata\', \'plot1size\', \'hhid_key\', /data/a)', 'instance(\'hhplotdata\')/root/item[hhid_key = \'aa\']/plot1size' ],
+        [ 'pulldata(\'hhplotdata\', \'plot1size\', \'hhid_key\', /data/b)', 'instance(\'hhplotdata\')/root/item[hhid_key = 22]/plot1size' ],
     ].forEach( function( test ) {
         it( 'works', function() {
-            var model = new Model( '<model><instance/></model>' );
+            var model = new Model( '<model><instance><data><a>aa</a><b>22</b></data></instance></model>' );
             var expected = test[ 1 ];
             model.init();
             expect( model.replacePullDataFn( test[ 0 ] ) ).toEqual( expected );

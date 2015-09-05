@@ -615,6 +615,7 @@ define( function( require, exports, module ) {
                 // as the context for the complete expression, so we have to evaluate the position separately. Otherwise
                 // relative paths would break.
                 searchValue = that.evaluate( params[ 3 ], 'string', selector, index, true );
+                searchValue = isNaN( searchValue ) ? '\'' + searchValue + '\'' : searchValue;
                 searchXPath = 'instance(' + params[ 0 ] + ')/root/item[' + params[ 2 ] + ' = ' + searchValue + ']/' + params[ 1 ];
 
                 expr = expr.replace( pullData[ 0 ], searchXPath );
