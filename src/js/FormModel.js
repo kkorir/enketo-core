@@ -520,6 +520,7 @@ define( function( require, exports, module ) {
      * @return {string}      new expression
      */
     FormModel.prototype.replaceInstanceFn = function( expr ) {
+        // TODO: would be more consistent to use utls.parseFunctionFromExpression() and utils.stripQuotes
         return expr.replace( this.INSTANCE, function( match, id ) {
             return '/model/instance[@id="' + id + '"]';
         } );
@@ -547,23 +548,19 @@ define( function( require, exports, module ) {
      * @return {string}      converted XPath expression
      */
     FormModel.prototype.replaceIndexedRepeatFn = function( expr, selector, index ) {
-        var that = this,
-            indexedRepeats = utils.parseFunctionFromExpression( expr, 'indexed-repeat' );
+        var that = this;
+        var indexedRepeats = utils.parseFunctionFromExpression( expr, 'indexed-repeat' );
 
         if ( !indexedRepeats.length ) {
             return expr;
         }
 
         indexedRepeats.forEach( function( indexedRepeat ) {
-            var i, positionedPath, position,
-                params = indexedRepeat[ 1 ].split( ',' );
+            var i, positionedPath;
+            var position;
+            var params = indexedRepeat[ 1 ];
 
             if ( params.length % 2 === 1 ) {
-
-                // trim parameters
-                params = params.map( function( param ) {
-                    return param.trim();
-                } );
 
                 positionedPath = params[ 0 ];
 
@@ -574,6 +571,7 @@ define( function( require, exports, module ) {
                     position = !isNaN( params[ i ] ) ? params[ i ] : that.evaluate( params[ i ], 'number', selector, index, true );
                     positionedPath = positionedPath.replace( params[ i - 1 ], params[ i - 1 ] + '[position() = ' + position + ']' );
                 }
+
                 expr = expr.replace( indexedRepeat[ 0 ], positionedPath );
 
             } else {
@@ -596,20 +594,15 @@ define( function( require, exports, module ) {
         pullDatas.forEach( function( pullData ) {
             var searchValue;
             var searchXPath;
-            var params = pullData[ 1 ].split( ',' );
+            var params = pullData[ 1 ];
 
             if ( params.length === 4 ) {
-
-                // trim parameters
-                params = params.map( function( param ) {
-                    return param.trim();
-                } );
 
                 // strip quotes
                 params[ 1 ] = utils.stripQuotes( params[ 1 ] );
                 params[ 2 ] = utils.stripQuotes( params[ 2 ] );
 
-                // TODO: the 2nd and 3rd parameter could probably also be expressions...
+                // TODO: the 2nd and 3rd parameter could probably also be expressions.
 
                 // The 4th argument will become an XPath predicate. The context for an XPath predicate, is not the same
                 // as the context for the complete expression, so we have to evaluate the position separately. Otherwise
