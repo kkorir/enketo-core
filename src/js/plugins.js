@@ -72,68 +72,6 @@ define( function( require, exports, module ) {
     };
 
     /**
-     * Supports a small subset of MarkDown and converts this to HTML: 
-     * - _, __, *, **, [](), #, ##, ###, ####, #####, 
-     * - html-encoded span tags,
-     * - unordered markdown lists and order markdown lists
-     * - newline characters
-     *
-     * Not supported: escaping and other MarkDown, HTML syntax
-     */
-    $.fn.markdownToHtml = function() {
-
-        function _createHeader( match, hashtags, content ) {
-            var level = hashtags.length;
-            return '<h' + level + '>' + content.replace( /#+$/, '' ).trim() + '</h' + level + '>';
-        }
-
-        function _createUnorderedList( match ) {
-            return '<ul>' + match.replace( /\n(\*|\+|-)(.*)/gm, '<li>$2</li>' ) + '</ul>';
-        }
-
-        function _createOrderedList( match ) {
-            return '<ol>' + match.replace( /\n([0-9]+\.)(.*)/gm, '<li>$2</li>' ) + '</ol>';
-        }
-
-        return this.each( function() {
-            var html,
-                $childStore = $( '<div/>' );
-            $( this ).children( ':not(input, select, textarea)' ).each( function( index ) {
-                var name = '$$$' + index;
-                $( this ).clone().markdownToHtml().appendTo( $childStore );
-                $( this ).replaceWith( name );
-            } );
-            html = $( this ).html()
-                // htmlencoding of < and > is already done in Pyxform, this is for handcoded forms
-                .replace( '/</gm', '&lt;' )
-                .replace( '/>/gm', '&gt;' )
-                // strong
-                .replace( /(\*\*|__)([^\s].*[^\s])\1/gm, '<strong>$2</strong>' )
-                // emphasis
-                .replace( /(\*|_)([^\s].*[^\s])\1/gm, '<em>$2</em>' )
-                // links
-                .replace( /\[([^\]]*)\]\(([^\)]+)\)/gm, '<a href="$2" target="_blank">$1</a>' )
-                // headers
-                .replace( /(#+)([^\n]*)\n/gm, _createHeader )
-                // unordered lists (in JS $ matches end of line as well as end of string)
-                .replace( /(\n(\*|\+|-)(.*))+$/gm, _createUnorderedList )
-                // ordered lists (in JS $ matches end of line as well as end of string)
-                .replace( /(\n([0-9]+\.)(.*))+$/gm, _createOrderedList )
-                // span
-                .replace( /&lt;\s?span(.+)&gt;(.+)&lt;\/\s?span\s?&gt;/gm, '<span$1>$2</span>' )
-                // new lines
-                .replace( /\n/gm, '<br />' );
-            $childStore.children().each( function( i ) {
-                var regex = new RegExp( '\\$\\$\\$' + i );
-                html = html.replace( regex, $( this )[ 0 ].outerHTML );
-            } );
-            $( this ).text( '' ).append( html );
-        } );
-    };
-
-
-
-    /**
      * Reverses a jQuery collection
      * @type {Array}
      */
