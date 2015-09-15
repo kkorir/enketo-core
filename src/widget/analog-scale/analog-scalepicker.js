@@ -44,7 +44,7 @@ define( function( require, exports, module ) {
 
         $( this.element ).slider( {
             reversed: true,
-            min: -1,
+            min: 0,
             max: 100,
             orientation: this.orientation,
             step: 1,
@@ -52,8 +52,8 @@ define( function( require, exports, module ) {
         } );
         this.$widget = $( this.element ).next( '.widget' );
         this.$slider = this.$widget.find( '.slider' );
+        this._renderResetButton();
         this._renderLabels();
-        //this._addValueBox();
         this._renderScale();
         this._setChangeHandler();
     };
@@ -67,8 +67,6 @@ define( function( require, exports, module ) {
             return label.trim();
         } );
 
-        console.debug( 'label', labels ); // DEBUG
-
         this.$mainLabel = this.$mainLabel || $( '<span class="widget question-label active" />' ).insertAfter( $labelEl );
         this.$mainLabel.empty().append( labels[ 0 ] );
 
@@ -80,25 +78,37 @@ define( function( require, exports, module ) {
 
         if ( labels[ 3 ] ) {
             this.$showValue = this.$showValue || $( '<div class="show-value" />' ).insertBefore( this.element );
-            this.$showValue.empty().append( labels[ 3 ] + '<span class="value">' + this.element.value + '</span>' );
+            this.$showValue.empty().append( '<div class="show-value__box">' + labels[ 3 ] +
+                '<span class="show-value__value">' + this.element.value + '</span></div>' );
         } else if ( this.$showValue ) {
             this.$showValue.remove();
             this.$showValue = undefined;
         }
     };
 
-    Analogscalepicker.prototype._renderValueBox = function() {
-        this.$widget.append(
-            '<div class="value-box"></div>'
-        );
-    };
-
     Analogscalepicker.prototype._renderScale = function() {
         var $scale = $( '<div class="scale"></div>' );
         for ( var i = 100; i >= 0; i -= 10 ) {
-            $scale.append( '<div class="number"><div class="value">' + i + '</div><div class="ticks"></div></div>' );
+            $scale.append( '<div class="number"><div class="ticks"></div><div class="value">' + i + '</div></div>' );
         }
         this.$slider.prepend( $scale );
+    };
+
+    Analogscalepicker.prototype._renderResetButton = function() {
+        var that = this;
+
+        $( '<button class="btn-icon-only btn-reset"><i class="icon icon-refresh"></i></button>' )
+            .appendTo( this.$widget )
+            .on( 'click', function( evt ) {
+                $( that.element ).slider( 'setValue', 0, false );
+                $( that.element ).val( '' ).trigger( 'change' );
+                that._updateCurrentValueShown();
+                return false;
+            } );
+    };
+
+    Analogscalepicker.prototype._updateCurrentValueShown = function() {
+        this.$showValue.find( '.show-value__value' ).text( this.element.value );
     };
 
     /**
@@ -106,14 +116,10 @@ define( function( require, exports, module ) {
      */
     Analogscalepicker.prototype._setChangeHandler = function() {
         var that = this;
+
         $( this.element ).on( 'slideStop.' + this.namespace, function( slideEvt ) {
-            // set to empty if value = -1
-            if ( Number( this.value ) === -1 ) {
-                this.value = '';
-            }
-            console.debug( 'updating value', this.value ); //DEBUG
-            that.$showValue.find( '.value' ).text( this.value );
             $( this ).trigger( 'change' );
+            that._updateCurrentValueShown();
         } );
     };
 
