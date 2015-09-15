@@ -89,7 +89,7 @@ define( function( require, exports, module ) {
     Analogscalepicker.prototype._renderScale = function() {
         var $scale = $( '<div class="scale"></div>' );
         for ( var i = 100; i >= 0; i -= 10 ) {
-            $scale.append( '<div class="number"><div class="ticks"></div><div class="value">' + i + '</div></div>' );
+            $scale.append( '<div class="scale__number"><div class="scale__ticks"></div><div class="scale__value">' + i + '</div></div>' );
         }
         this.$slider.prepend( $scale );
     };
