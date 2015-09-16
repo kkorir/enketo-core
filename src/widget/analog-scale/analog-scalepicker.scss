@@ -5,6 +5,62 @@ $width: 150px;
 $min-height: 800px;
 $question-margin: 20px;
 
+@mixin ticks($orientation: "vertical") {
+    @if $orientation == "horizontal" {
+        .scale__number {
+            position: relative;
+            line-height: 16px;
+            display: inline-block;
+            height: 30px;
+            width: 10%;
+            border-left: $border;
+            background-image: linear-gradient(0deg, $tick-color 1px, transparent 0px);
+            background-repeat: no-repeat;
+            background-size: 100% 52%;
+            background-position: top;
+            &:last-child {
+                width: 0;
+                margin-right: -2px;
+            }
+        }
+        .scale__ticks {
+            //width: 50%;
+            //height: 100%;
+            //margin-left: 25%;
+            //background-image: linear-gradient(0deg, $tick-color 1px, transparent 0px);
+            //background-repeat: repeat;
+            //background-origin: border-box;
+            //background-size: 100% 10.2%;
+       
+        }
+    }
+    @else {
+        .scale__number {
+            position: relative;
+            line-height: 16px;
+            height: 10%;
+            width: 30px;
+            border-top: $border;
+            background-image: linear-gradient(90deg, $tick-color 1px, transparent 0px);
+            background-repeat: no-repeat;
+            background-size: 52% 100%;
+            background-position: right;
+            &:last-child {
+                height: 0;
+            }
+        }
+        .scale__ticks {
+            width: 50%;
+            height: 100%;
+            margin-left: 25%;
+            background-image: linear-gradient(0deg, $tick-color 1px, transparent 0px);
+            background-repeat: repeat;
+            background-origin: border-box;
+            background-size: 100% 10.2%;
+        }
+    }
+}
+
 .or-appearance-analog-scale {
     position: relative;
     min-height: $min-height;
@@ -13,26 +69,16 @@ $question-margin: 20px;
     .question-label.active[lang] {
         display: none;
     }
-    .question-label.active,
-    .or-hint.active,
-    .show-value {
-        width: calc(100% - #{$width} - #{$question-margin});
-    }
-    .slider-vertical {
+    .scale {
+        @include font-normal;
+        height: 100%;
         position: absolute;
-        top: $question-margin;
-        right: $question-margin;
-        width: $width;
-    }
-    .slider-vertical .slider {
-        min-height: 600px;
-        margin: 10px 0;
-        left: 50%;
+        font-size: 12px;
     }
     .slider-disabled {
         opacity: 0.5;
     }
-    .slider-vertical .slider-track {
+    .slider-track {
         border-bottom: none;
         background: none;
         border-radius: 0;
@@ -42,74 +88,16 @@ $question-margin: 20px;
     .slider-handle {
         background: $handle-color;
         opacity: 0.9;
-        //outline: 0;
+        // outline: 0;
    
     }
     .slider-selection {
         background: transparent;
+        box-shadow: none;
         border-radius: 0;
     }
     .btn-reset {
         position: absolute;
-        bottom: 50px;
-        left: 100px;
-    }
-    .scale {
-        @include font-normal;
-        height: 100%;
-        position: absolute;
-        left: -6px;
-        font-size: 12px;
-    }
-    .scale__number {
-        position: relative;
-        line-height: 16px;
-        height: 10%;
-        width: 30px;
-        border-top: $border;
-        background-image: linear-gradient(90deg, $tick-color 1px, transparent 0px);
-        background-repeat: no-repeat;
-        background-size: 52% 100%;
-        background-position: right;
-        &:last-child {
-            height: 0;
-        }
-    }
-    .scale__value {
-        position: absolute;
-        top: -9px;
-        left: -25px;
-        width: 20px;
-        text-align: center;
-    }
-    .scale__ticks {
-        width: 50%;
-        height: 100%;
-        margin-left: 25%;
-        background-image: linear-gradient(0deg, $tick-color 1px, transparent 0px);
-        background-repeat: repeat;
-        background-origin: border-box;
-        background-size: 100% 10.2%;
-    }
-    &.or-appearance-no-ticks {
-        .scale__number {
-            &:not(:last-child):not(:first-child) {
-                border-top: none;
-            }
-        }
-        .scale__value {
-            display: none;
-        }
-        .scale__ticks {
-            display: none;
-        }
-    }
-    .max-label,
-    .min-label {
-        text-align: center;
-    }
-    .show-value {
-        width: calc(100% - $width);
     }
     .show-value__box {
         background-color: black;
@@ -127,6 +115,102 @@ $question-margin: 20px;
         min-width: 1px;
         min-height: 23px;
         @extend h4;
+    }
+    .max-label,
+    .min-label {
+        //vertical-align: middle;
+        text-align: center;
+    }
+    .slider-vertical {
+        position: absolute;
+        top: $question-margin;
+        right: $question-margin;
+        width: $width;
+        @include ticks("vertical");
+        .slider {
+            min-height: 600px;
+            margin: 10px 0;
+            left: 50%;
+        }
+        .scale {
+            left: -6px;
+        }
+        .scale__value {
+            position: absolute;
+            top: -9px;
+            left: -25px;
+            width: 20px;
+            text-align: center;
+        }
+        .btn-reset {
+            bottom: 50px;
+            left: 100px;
+        }
+    }
+    .slider-horizontal {
+        @include display-flex;
+        @include flex-wrap(nowrap);
+        @include flex-direction(row);
+        align-items: center;
+        position: relative;
+        @include ticks("horizontal");
+        .slider {
+            @include flex(1);
+            order: 2;
+        }
+        .slider-track {
+            margin-top: -6px;
+        }
+        .slider-handle {
+            margin-top: -3.5px;
+        }
+        .scale {
+            position: relative;
+            top: -6.5px;
+        }
+        .scale__value {
+            position: absolute;
+            top: -17px;
+            width: 20px;
+            left: -10px;
+            text-align: center;
+        }
+        .btn-reset {
+            left: calc(50% - 18px);
+            bottom: 5px;
+        }
+        .max-label,
+        .min-label {
+            width: 80px;
+        }
+        .min-label {
+            order: 1;
+            padding: 10px 10px 10px 0;
+        }
+        .max-label {
+            order: 3;
+            padding: 10px 0 10px 10px;
+        }
+    }
+    &.or-appearance-no-ticks {
+        .scale__number {
+            &:not(:last-child):not(:first-child) {
+                border-top: none;
+            }
+        }
+        .scale__value {
+            display: none;
+        }
+        .scale__ticks {
+            display: none;
+        }
+    }
+    &:not(.or-appearance-horizontal) {
+        .question-label.active,
+        .or-hint.active,
+        .show-value {
+            width: calc(100% - #{$width} - #{$question-margin});
+        }
     }
 }
 

@@ -40,10 +40,11 @@ define( function( require, exports, module ) {
         var value = Number( this.element.value ) || -1;
 
         this.orientation = $question.hasClass( 'or-appearance-horizontal' ) ? 'horizontal' : 'vertical';
+
         this.ticks = !$question.hasClass( 'or-appearance-no-ticks' );
 
         $( this.element ).slider( {
-            reversed: true,
+            reversed: this.orientation === 'vertical',
             min: 0,
             max: 100,
             orientation: this.orientation,
@@ -88,10 +89,21 @@ define( function( require, exports, module ) {
 
     Analogscalepicker.prototype._renderScale = function() {
         var $scale = $( '<div class="scale"></div>' );
-        for ( var i = 100; i >= 0; i -= 10 ) {
-            $scale.append( '<div class="scale__number"><div class="scale__ticks"></div><div class="scale__value">' + i + '</div></div>' );
+        if ( this.orientation === 'vertical' ) {
+            for ( var i = 100; i >= 0; i -= 10 ) {
+                $scale.append( this._getNumberHtml( i ) );
+            }
+        } else {
+            for ( var i = 0; i <= 100; i += 10 ) {
+                $scale.append( this._getNumberHtml( i ) );
+            }
         }
+
         this.$slider.prepend( $scale );
+    };
+
+    Analogscalepicker.prototype._getNumberHtml = function( num ) {
+        return '<div class="scale__number"><div class="scale__ticks"></div><div class="scale__value">' + num + '</div></div>';
     };
 
     Analogscalepicker.prototype._renderResetButton = function() {
