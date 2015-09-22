@@ -24,14 +24,14 @@ $question-margin: 20px;
             }
         }
         .scale__ticks {
-            //width: 50%;
-            //height: 100%;
-            //margin-left: 25%;
-            //background-image: linear-gradient(0deg, $tick-color 1px, transparent 0px);
-            //background-repeat: repeat;
-            //background-origin: border-box;
-            //background-size: 100% 10.2%;
-       
+            width: 100%;
+            height: 50%;
+            // why not 25%?
+            margin-top: 18%;
+            background-image: linear-gradient(270deg, $tick-color 1px, transparent 0px);
+            background-repeat: repeat-x;
+            background-origin: border-box;
+            background-size: 10% 100%;
         }
     }
     @else {
@@ -54,9 +54,9 @@ $question-margin: 20px;
             height: 100%;
             margin-left: 25%;
             background-image: linear-gradient(0deg, $tick-color 1px, transparent 0px);
-            background-repeat: repeat;
+            background-repeat: repeat-y;
             background-origin: border-box;
-            background-size: 100% 10.2%;
+            background-size: 100% 10%;
         }
     }
 }
