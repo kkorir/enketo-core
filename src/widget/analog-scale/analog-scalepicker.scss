@@ -196,6 +196,7 @@ $question-margin: 20px;
         .scale__number {
             &:not(:last-child):not(:first-child) {
                 border-top: none;
+                border-left: none;
             }
         }
         .scale__value {
