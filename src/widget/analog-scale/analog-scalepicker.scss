@@ -97,7 +97,7 @@ $question-margin: 20px;
         border-radius: 0;
     }
     .btn-reset {
-        position: absolute;
+        position: relative;
     }
     .show-value__box {
         background-color: black;
@@ -143,8 +143,8 @@ $question-margin: 20px;
             text-align: center;
         }
         .btn-reset {
-            bottom: 50px;
-            left: 100px;
+            bottom: -290px;
+            left: 90px;
         }
     }
     .slider-horizontal {
@@ -176,8 +176,8 @@ $question-margin: 20px;
             text-align: center;
         }
         .btn-reset {
-            left: calc(50% - 18px);
-            bottom: 5px;
+            left: 50%;
+            bottom: -35px;
         }
         .max-label,
         .min-label {
