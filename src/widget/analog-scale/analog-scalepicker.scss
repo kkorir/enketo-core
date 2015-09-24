@@ -132,6 +132,9 @@ $question-margin: 20px;
             margin: 10px 0;
             left: 50%;
         }
+        .slider-handle {
+            margin-left: -6px;
+        }
         .scale {
             left: -6px;
         }
@@ -162,7 +165,7 @@ $question-margin: 20px;
             margin-top: -6px;
         }
         .slider-handle {
-            margin-top: -3.5px;
+            margin-top: -5.5px;
         }
         .scale {
             position: relative;
