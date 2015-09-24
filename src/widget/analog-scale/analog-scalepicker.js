@@ -78,7 +78,7 @@ define( function( require, exports, module ) {
         this.$minLabel.empty().append( labels[ 2 ] );
 
         if ( labels[ 3 ] ) {
-            this.$showValue = this.$showValue || $( '<div class="show-value" />' ).insertBefore( this.element );
+            this.$showValue = this.$showValue || $( '<div class="widget show-value" />' ).insertBefore( this.element );
             this.$showValue.empty().append( '<div class="show-value__box">' + labels[ 3 ] +
                 '<span class="show-value__value">' + this.element.value + '</span></div>' );
         } else if ( this.$showValue ) {
@@ -88,13 +88,14 @@ define( function( require, exports, module ) {
     };
 
     Analogscalepicker.prototype._renderScale = function() {
+        var i;
         var $scale = $( '<div class="scale"></div>' );
         if ( this.orientation === 'vertical' ) {
-            for ( var i = 100; i >= 0; i -= 10 ) {
+            for ( i = 100; i >= 0; i -= 10 ) {
                 $scale.append( this._getNumberHtml( i ) );
             }
         } else {
-            for ( var i = 0; i <= 100; i += 10 ) {
+            for ( i = 0; i <= 100; i += 10 ) {
                 $scale.append( this._getNumberHtml( i ) );
             }
         }
@@ -133,6 +134,14 @@ define( function( require, exports, module ) {
             $( this ).trigger( 'change' );
             that._updateCurrentValueShown();
         } );
+    };
+
+    Analogscalepicker.prototype.destroy = function( element ) {
+        $( element )
+            .removeData( this.namespace )
+            .off( '.' + this.namespace )
+            .show()
+            .siblings( '.widget' ).remove();
     };
 
     Analogscalepicker.prototype.disable = function() {
