@@ -110,11 +110,13 @@ $question-margin: 20px;
         @include font-normal;
     }
     .show-value__value {
-        margin-top: 3px;
+        @include font-bold;
+        font-size: $font-size-base * 1.25;
+        padding: 8px;
+        //margin-top: 3px;
         display: block;
         min-width: 1px;
-        min-height: 23px;
-        @extend h4;
+        min-height: $font-size-base * 1.25 + 16px;
     }
     .max-label,
     .min-label {
