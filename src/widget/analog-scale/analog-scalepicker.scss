@@ -220,8 +220,45 @@ $min-height: 800px;
 
 // corrections for rtl display
 .or[dir="rtl"] {
-    .slider-vertical .slider-handle {
-        margin-right: -4.5px;
-        margin-left: auto;
+    .slider-vertical {
+        top: $question-margin;
+        right: auto;
+        left: $question-margin;
+        .slider {
+            left: auto;
+            right: 50%;
+        }
+        .btn-reset {
+            left: auto;
+            right: 105px;
+        }
+        .scale__ticks {
+            margin-left: auto;
+            margin-right: 25%;
+        }
+    }
+    .slider-horizontal {
+        .scale {
+            @include display-flex;
+            @include flex-wrap(nowrap);
+            @include flex-direction(row);
+        }
+        .scale__number {
+            @for $position from 1 through 11 {
+                &:nth-child(#{$position}) {
+                    order: #{11 - $position};
+                }
+            }
+        }
+        .min-label {
+            order: 3;
+        }
+        .max-label {
+            order: 1;
+        }
+        .btn-reset {
+            left: auto;
+            right: 50%;
+        }
     }
 }
