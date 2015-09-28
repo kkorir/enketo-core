@@ -216,6 +216,12 @@ $min-height: 800px;
             width: calc(100% - #{$width} - #{$question-margin});
         }
     }
+    &.invalid-constraint, &.invalid-required {
+        .or-constraint-msg.active, .or-required-msg.active {
+            position: absolute;
+            bottom: 10px;
+        }
+    }
 }
 
 // corrections for small screens
