@@ -155,6 +155,7 @@ $min-height: 800px;
         @include flex-direction(row);
         align-items: center;
         position: relative;
+        margin-top: 25px;
         @include ticks("horizontal");
         .slider {
             @include flex(1);
@@ -217,47 +218,75 @@ $min-height: 800px;
     }
 }
 
-// corrections for rtl display
-.or[dir="rtl"] {
-    .slider-vertical {
-        top: $question-margin;
-        right: auto;
-        left: $question-margin;
-        .slider {
-            left: auto;
-            right: 50%;
-        }
-        .btn-reset {
-            left: auto;
-            right: 105px;
-        }
-        .scale__ticks {
-            margin-left: auto;
-            margin-right: 25%;
-        }
-    }
-    .slider-horizontal {
-        .scale {
-            @include display-flex;
-            @include flex-wrap(nowrap);
-            @include flex-direction(row);
-        }
-        .scale__number {
-            @for $position from 1 through 11 {
-                &:nth-child(#{$position}) {
-                    order: #{11 - $position};
-                }
+// corrections for small screens
+@media screen and (max-width: 600px) {
+    .or-appearance-analog-scale {
+        .slider-horizontal {
+            @include flex-wrap(wrap);
+            margin-top: 45px;
+            .slider {
+                flex: 100%;
+                order: 1;
+            }
+            .max-label {
+                order: 4;
+            }
+            .min-label {
+                order: 2;
+            }
+            .btn-reset {
+                flex: 1;
+                order: 3;
+                left: auto;
+                bottom: auto;
             }
         }
-        .min-label {
-            order: 3;
+    }
+}
+
+// corrections for rtl display
+.or[dir="rtl"] {
+    .or-appearance-analog-scale {
+        .slider-vertical {
+            top: $question-margin;
+            right: auto;
+            left: $question-margin;
+            .slider {
+                left: auto;
+                right: 50%;
+            }
+            .btn-reset {
+                left: auto;
+                right: 105px;
+            }
+            .scale__ticks {
+                margin-left: auto;
+                margin-right: 25%;
+            }
         }
-        .max-label {
-            order: 1;
-        }
-        .btn-reset {
-            left: auto;
-            right: 50%;
+        .slider-horizontal {
+            .scale {
+                @include display-flex;
+                @include flex-wrap(nowrap);
+                @include flex-direction(row);
+            }
+            .scale__number {
+                @for $position from 1 through 11 {
+                    &:nth-child(#{$position}) {
+                        order: #{11 - $position};
+                    }
+                }
+            }
+            .min-label {
+                order: 3;
+            }
+            .max-label {
+                order: 1;
+            }
+            .btn-reset {
+                left: auto;
+                right: 50%;
+            }
         }
     }
 }
