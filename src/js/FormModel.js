@@ -9,8 +9,8 @@ define( function( require, exports, module ) {
     var utils = require( './utils' );
     var $ = require( 'jquery' );
     var FormLogicError = require( './FormLogicError' );
-    var ExtendedXpathEvaluator = require('extended-xpath');
-    var openrosa_xpath_extensions = require( 'openrosa-xpath-extensions');
+    var ExtendedXpathEvaluator = require( 'extended-xpath' );
+    var openrosa_xpath_extensions = require( 'openrosa-xpath-extensions' );
     require( './plugins' );
     require( './extend' );
     require( 'jquery-xpath-basic' );
@@ -875,7 +875,6 @@ define( function( require, exports, module ) {
             //first change the value so that it can be evaluated in XPath (validated)
             $target.text( newVal );
             //then return validation result
-            success = this.validate( expr, xmlDataType );
             updated = this.getClosestRepeat();
             updated.nodes = [ $target.prop( 'nodeName' ) ];
             this.model.$.trigger( 'dataupdate', updated );
@@ -887,8 +886,6 @@ define( function( require, exports, module ) {
                     $target.removeAttr( 'type' );
                 }
             }
-
-            return success;
         }
         if ( $target.length > 1 ) {
             console.error( 'nodeset.setVal expected nodeset with one node, but received multiple' );
@@ -1012,10 +1009,10 @@ define( function( require, exports, module ) {
      * Validate a value with an XPath Expression and /or xml data type
      * @param  {?string=} expr        XPath expression
      * @param  {?string=} xmlDataType XML datatype
-     * @return {boolean}
+     * @return Promise({boolean})
      */
     Nodeset.prototype.validate = function( expr, xmlDataType ) {
-        var typeValid, exprValid, value;
+        var value;
 
         if ( !xmlDataType || typeof types[ xmlDataType.toLowerCase() ] === 'undefined' ) {
             xmlDataType = 'string';
@@ -1024,19 +1021,23 @@ define( function( require, exports, module ) {
         // This one weird trick results in a small validation performance increase.
         // Do not obtain *the value* if the expr is empty and data type is string, select, select1, binary knowing that this will always return true.
         if ( !expr && ( xmlDataType === 'string' || xmlDataType === 'select' || xmlDataType === 'select1' || xmlDataType === 'binary' ) ) {
-            return true;
+            return Promise.resolve( true );
         }
 
         value = this.getVal()[ 0 ];
 
         if ( value.toString() === '' ) {
-            return true;
+            return Promise.resolve( true );
         }
 
-        typeValid = types[ xmlDataType.toLowerCase() ].validate( value );
-        exprValid = ( typeof expr !== 'undefined' && expr !== null && expr.length > 0 ) ? this.model.evaluate( expr, 'boolean', this.originalSelector, this.index ) : true;
-
-        return ( typeValid && exprValid );
+        return Promise.resolve()
+            .then( function() {
+                return types[ xmlDataType.toLowerCase() ].validate( value );
+            } )
+            .then( function( typeValid ) {
+                var exprValid = ( typeof expr !== 'undefined' && expr !== null && expr.length > 0 ) ? this.model.evaluate( expr, 'boolean', this.originalSelector, this.index ) : true;
+                return ( typeValid && exprValid );
+            } );
     };
 
     /**
