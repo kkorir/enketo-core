@@ -1865,9 +1865,9 @@ define( function( require, exports, module ) {
                     $firstError = $form.find( '.invalid-required, .invalid-constraint' ).eq( 0 );
 
                     if ( $firstError.length > 0 && window.scrollTo ) {
-                        if ( this.pages.active ) {
+                        if ( that.pages.active ) {
                             // move to the first page with an error
-                            this.pages.flipToPageContaining( $firstError );
+                            that.pages.flipToPageContaining( $firstError );
                         }
                         window.scrollTo( 0, $firstError.offset().top - 50 );
                     }
