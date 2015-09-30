@@ -10,8 +10,8 @@ define( function( require, exports, module ) {
     var $ = require( 'jquery' );
     var Promise = require( 'lie' );
     var FormLogicError = require( './Form-logic-error' );
-    var ExtendedXpathEvaluator = require('extended-xpath');
-    var openrosa_xpath_extensions = require( 'openrosa-xpath-extensions');
+    var ExtendedXpathEvaluator = require( 'extended-xpath' );
+    var openrosa_xpath_extensions = require( 'openrosa-xpath-extensions' );
     require( './plugins' );
     require( './extend' );
     require( 'jquery-xpath-basic' );
@@ -904,7 +904,6 @@ define( function( require, exports, module ) {
             //first change the value so that it can be evaluated in XPath (validated)
             $target.text( newVal );
             //then return validation result
-            success = this.validate( expr, xmlDataType );
             updated = this.getClosestRepeat();
             updated.nodes = [ $target.prop( 'nodeName' ) ];
             this.model.$.trigger( 'dataupdate', updated );
@@ -916,8 +915,6 @@ define( function( require, exports, module ) {
                     $target.removeAttr( 'type' );
                 }
             }
-
-            return success;
         }
         if ( $target.length > 1 ) {
             console.error( 'nodeset.setVal expected nodeset with one node, but received multiple' );
