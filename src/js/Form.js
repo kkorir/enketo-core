@@ -1872,6 +1872,11 @@ define( function( require, exports, module ) {
                         window.scrollTo( 0, $firstError.offset().top - 50 );
                     }
                     return $firstError.length === 0;
+                } )
+                .catch( function ( e ) {
+                    // fail whole-form validation if any of the question
+                    // validations threw.
+                    return false;
                 } );
         };
 
@@ -1987,13 +1992,18 @@ define( function( require, exports, module ) {
                 }
             } else {
                 that.setValid( $input, 'required' );
-                validCons = validCons.then( function( validCons ) {
-                    if ( typeof validCons !== 'undefined' && validCons === false ) {
+                validCons = validCons
+                    .then( function( validCons ) {
+                        if ( typeof validCons !== 'undefined' && validCons === false ) {
+                            that.setInvalid( $input, 'constraint' );
+                        } else if ( validCons !== null ) {
+                            that.setValid( $input, 'constraint' );
+                        }
+                    } )
+                    .catch( function( e ) {
                         that.setInvalid( $input, 'constraint' );
-                    } else if ( validCons !== null ) {
-                        that.setValid( $input, 'constraint' );
-                    }
-                } );
+                        throw e;
+                    } );
             }
 
             return validCons;
