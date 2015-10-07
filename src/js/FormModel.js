@@ -854,7 +854,7 @@ define( function( require, exports, module ) {
      * @param {?string=} expr  XPath expression to validate the node.
      * @param {?string=} xmlDataType XML data type of the node
      *
-     * @return {?boolean} null is returned when the node is not found or multiple nodes were selected
+     * @return {Promise} wrapping {?boolean}; null is returned when the node is not found or multiple nodes were selected
      */
     Nodeset.prototype.setVal = function( newVals, expr, xmlDataType ) {
         var $target, curVal, /**@type {string}*/ newVal, success, updated;
@@ -875,6 +875,7 @@ define( function( require, exports, module ) {
             //first change the value so that it can be evaluated in XPath (validated)
             $target.text( newVal );
             //then return validation result
+            success = this.validate( expr, xmlDataType );
             updated = this.getClosestRepeat();
             updated.nodes = [ $target.prop( 'nodeName' ) ];
             this.model.$.trigger( 'dataupdate', updated );
@@ -886,18 +887,20 @@ define( function( require, exports, module ) {
                     $target.removeAttr( 'type' );
                 }
             }
+
+            return success;
         }
         if ( $target.length > 1 ) {
             console.error( 'nodeset.setVal expected nodeset with one node, but received multiple' );
-            return null;
+            return Promise.resolve( null );
         }
         if ( $target.length === 0 ) {
             console.log( 'Data node: ' + this.selector + ' with null-based index: ' + this.index + ' not found. Ignored.' );
-            return null;
+            return Promise.resolve( null );
         }
         //always validate if the new value is not empty, even if value didn't change (see validateAll() function)
         //return (newVal.length > 0 && validateAll) ? this.validate(expr, xmlDataType) : true;
-        return null;
+        return Promise.resolve( null );
     };
 
 
@@ -1009,10 +1012,11 @@ define( function( require, exports, module ) {
      * Validate a value with an XPath Expression and /or xml data type
      * @param  {?string=} expr        XPath expression
      * @param  {?string=} xmlDataType XML datatype
-     * @return Promise({boolean})
+     * @return {Promise} wrapping a boolean indicating if the value is valid or not; error also indicates invalid field, or problem validating it
      */
     Nodeset.prototype.validate = function( expr, xmlDataType ) {
-        var value;
+        var that = this,
+            value;
 
         if ( !xmlDataType || typeof types[ xmlDataType.toLowerCase() ] === 'undefined' ) {
             xmlDataType = 'string';
@@ -1024,7 +1028,7 @@ define( function( require, exports, module ) {
             return Promise.resolve( true );
         }
 
-        value = this.getVal()[ 0 ];
+        value = that.getVal()[ 0 ];
 
         if ( value.toString() === '' ) {
             return Promise.resolve( true );
@@ -1035,7 +1039,7 @@ define( function( require, exports, module ) {
                 return types[ xmlDataType.toLowerCase() ].validate( value );
             } )
             .then( function( typeValid ) {
-                var exprValid = ( typeof expr !== 'undefined' && expr !== null && expr.length > 0 ) ? this.model.evaluate( expr, 'boolean', this.originalSelector, this.index ) : true;
+                var exprValid = ( typeof expr !== 'undefined' && expr !== null && expr.length > 0 ) ? that.model.evaluate( expr, 'boolean', that.originalSelector, that.index ) : true;
                 return ( typeValid && exprValid );
             } );
     };
