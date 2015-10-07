@@ -904,6 +904,7 @@ define( function( require, exports, module ) {
             //first change the value so that it can be evaluated in XPath (validated)
             $target.text( newVal );
             //then return validation result
+            success = this.validate( expr, xmlDataType );
             updated = this.getClosestRepeat();
             updated.nodes = [ $target.prop( 'nodeName' ) ];
             this.model.$.trigger( 'dataupdate', updated );
@@ -915,6 +916,8 @@ define( function( require, exports, module ) {
                     $target.removeAttr( 'type' );
                 }
             }
+
+            return success;
         }
         if ( $target.length > 1 ) {
             console.error( 'nodeset.setVal expected nodeset with one node, but received multiple' );
