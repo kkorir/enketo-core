@@ -58,6 +58,6 @@
         "leaflet": "0.7.x",
         "lie": "^3.0.1",
         "mergexml": "1.1.x"
-        "openrosa-xpath-evaluator": "git://github.com/alxndrsn/openrosa-xpath-evaluator.git#f383dc52d416d7a0bd27774ed8a9384b70cd8acd"
+        "openrosa-xpath-evaluator": "git://github.com/alxndrsn/openrosa-xpath-evaluator.git#fb838bee3c71c3a0df2979237d2d0e2c143b9221"
     }
 }
