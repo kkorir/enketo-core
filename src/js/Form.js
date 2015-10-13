@@ -1873,7 +1873,7 @@ define( function( require, exports, module ) {
                     }
                     return $firstError.length === 0;
                 } )
-                .catch( function ( e ) {
+                .catch( function( e ) {
                     // fail whole-form validation if any of the question
                     // validations threw.
                     return false;
