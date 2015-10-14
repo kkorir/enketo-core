@@ -64,9 +64,7 @@ define( function( require, exports, module ) {
 
             loadErrors = loadErrors.concat( form.init() );
 
-            if ( window.scrollTo ) {
-                window.scrollTo( 0, 0 );
-            }
+            $( formSelector )[ 0 ].scrollIntoView();
 
             return loadErrors;
         };
@@ -427,9 +425,7 @@ define( function( require, exports, module ) {
                     this.toggleButtons( newIndex );
                 }
 
-                if ( window.scrollTo ) {
-                    window.scrollTo( 0, 0 );
-                }
+                pageEl.scrollIntoView();
 
                 $( pageEl ).trigger( 'pageflip.enketo' );
             },
@@ -1871,12 +1867,13 @@ define( function( require, exports, module ) {
                 .then( function() {
                     $firstError = $form.find( '.invalid-required, .invalid-constraint' ).eq( 0 );
 
-                    if ( $firstError.length > 0 && window.scrollTo ) {
+                    if ( $firstError.length > 0 ) {
                         if ( that.pages.active ) {
                             // move to the first page with an error
                             that.pages.flipToPageContaining( $firstError );
                         }
-                        window.scrollTo( 0, $firstError.offset().top - 50 );
+
+                        $firstError[ 0 ].scrollIntoView();
                     }
                     return $firstError.length === 0;
                 } )
