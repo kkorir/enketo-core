@@ -8,8 +8,9 @@ define( function( require, exports, module ) {
     var MergeXML = require( 'mergexml/mergexml' );
     var utils = require( './utils' );
     var $ = require( 'jquery' );
-    var Promise = require( 'lie' );
-    var FormLogicError = require( './Form-logic-error' );
+    var FormLogicError = require( './FormLogicError' );
+    var ExtendedXpathEvaluator = require( 'extended-xpath' );
+    var openrosa_xpath_extensions = require( 'openrosa-xpath-extensions' );
     require( './plugins' );
     require( './extend' );
     require( 'jquery-xpath-basic' );
@@ -56,12 +57,8 @@ define( function( require, exports, module ) {
      * Initializes FormModel
      */
     FormModel.prototype.init = function() {
-        var id;
-        var i;
-        var instanceDoc;
-        var secondaryInstanceChildren;
-        var that = this;
-
+        var id, instanceDoc, instanceRoot,
+            that = this;
         /**
          * Default namespaces (on a primary instance, instance child, model) would create a problem using the **native** XPath evaluator.
          * It wouldn't find any regular /path/to/nodes. The solution is to ignore these by renaming these attributes to data-xmlns.
@@ -86,9 +83,9 @@ define( function( require, exports, module ) {
                 id = 'instance "' + instance.id + '"' || 'instance unknown';
                 instanceDoc = that.xml.getElementById( instance.id );
                 // remove any existing content that is just an XLSForm hack to pass ODK Validate
-                secondaryInstanceChildren = instanceDoc.childNodes;
-                for ( i = secondaryInstanceChildren.length - 1; i >= 0; i-- ) {
-                    instanceDoc.removeChild( secondaryInstanceChildren[ i ] );
+                instanceRoot = instanceDoc.querySelector( 'root' );
+                if ( instanceRoot ) {
+                    instanceDoc.removeChild( instanceRoot );
                 }
                 instanceDoc.appendChild( $.parseXML( instance.xmlStr ).firstChild );
             } );
@@ -155,10 +152,7 @@ define( function( require, exports, module ) {
      * @param  {string} modelDoc  The XML model to merge the record into
      */
     FormModel.prototype.mergeXml = function( recordStr ) {
-        var modelInstanceChildStr;
-        var merger;
-        var modelInstanceEl;
-        var modelInstanceChildEl;
+        var modelInstanceChildStr, merger, modelInstanceEl, modelInstanceChildEl;
         var that = this;
 
         if ( !recordStr ) {
@@ -171,12 +165,6 @@ define( function( require, exports, module ) {
         if ( !modelInstanceChildEl ) {
             throw new Error( 'Model is corrupt. It does not contain a childnode of instance' );
         }
-
-        /** 
-         * A Namespace merge problem occurs when ODK decides to invent a new namespace for a submission
-         * that is different from the XForm model namespace... So we just remove this nonsense.
-         */
-        recordStr = recordStr.replace( /\s(xmlns\=("|')[^\s\>]+("|'))/g, '' );
 
         /**
          * To comply with quirky behaviour of repeats in XForms, we manually create the correct number of repeat instances
@@ -298,7 +286,7 @@ define( function( require, exports, module ) {
      * Creates a custom XPath Evaluator to be used for XPath Expresssions that contain custom
      * OpenRosa functions or for browsers that do not have a native evaluator.
      */
-    FormModel.prototype.bindJsEvaluator = require( './xpath-evaluator-binding' );
+    FormModel.prototype.bindJsEvaluator = require( './XPathEvaluatorBinding' );
 
     /**
      * Gets the instance ID
@@ -307,15 +295,6 @@ define( function( require, exports, module ) {
      */
     FormModel.prototype.getInstanceID = function() {
         return this.node( '/*/meta/instanceID' ).getVal()[ 0 ];
-    };
-
-    /**
-     * Gets the deprecated ID
-     *
-     * @return {string} deprecatedID
-     */
-    FormModel.prototype.getDeprecatedID = function() {
-        return this.node( '/*/meta/deprecatedID' ).getVal()[ 0 ] || "";
     };
 
     /**
@@ -564,23 +543,16 @@ define( function( require, exports, module ) {
     };
 
     /** 
-     * Replaces current() with /absolute/path/to/node to ensure the context is shifted to the primary instance
-     * 
+     * Replaces current()/ with '' or '/' because Enketo does not (yet) change the context in an itemset.
      * Doing this here instead of adding a current() function to the XPath evaluator, means we can keep using
      * the much faster native evaluator in most cases!
      *
-     * Root will be shifted, and repeat positions injected, **later on**, so it's not included here.
-     *
-     * @param  {string} expr            original expression
-     * @param  {string} contextSelector context selector 
-     * @return {string}                 new expression
+     * @param  {string} expr original expression
+     * @return {string}      new expression
      */
-    FormModel.prototype.replaceCurrentFn = function( expr, contextSelector ) {
-        // relative paths
-        expr = expr.replace( 'current()/.', contextSelector + '/.' );
-        // absolute paths
-        expr = expr.replace( 'current()/', '/' );
-
+    FormModel.prototype.replaceCurrentFn = function( expr ) {
+        expr = expr.replace( /current\(\)\/\./g, '.' );
+        expr = expr.replace( /current\(\)/g, '' );
         return expr;
     };
 
@@ -593,6 +565,7 @@ define( function( require, exports, module ) {
      */
     FormModel.prototype.replaceIndexedRepeatFn = function( expr, selector, index ) {
         var that = this;
+        var error;
         var indexedRepeats = utils.parseFunctionFromExpression( expr, 'indexed-repeat' );
 
         if ( !indexedRepeats.length ) {
@@ -628,6 +601,7 @@ define( function( require, exports, module ) {
 
     FormModel.prototype.replacePullDataFn = function( expr, selector, index ) {
         var that = this;
+        var error;
         var pullDatas = utils.parseFunctionFromExpression( expr, 'pulldata' );
 
         if ( !pullDatas.length ) {
@@ -681,7 +655,7 @@ define( function( require, exports, module ) {
      * @return { ?(number|string|boolean|Array<element>) } the result
      */
     FormModel.prototype.evaluate = function( expr, resTypeStr, selector, index, tryNative ) {
-        var j, context, doc, resTypeNum, resultTypes, result, $collection, response, repeats, cacheKey, original, cacheable;
+        var j, error, context, doc, resTypeNum, resultTypes, result, $collection, response, repeats, cacheKey, original, cacheable;
 
         // console.debug( 'evaluating expr: ' + expr + ' with context selector: ' + selector + ', 0-based index: ' +
         //    index + ' and result type: ' + resTypeStr );
@@ -718,10 +692,9 @@ define( function( require, exports, module ) {
         if ( !this.convertedExpressions[ cacheKey ] ) {
             expr = expr;
             expr = expr.trim();
-            expr = this.replaceInstanceFn( expr );
-            expr = this.replaceCurrentFn( expr, selector );
-            // shiftRoot should come after replaceCurrentFn
             expr = this.shiftRoot( expr );
+            expr = this.replaceInstanceFn( expr );
+            expr = this.replaceCurrentFn( expr );
             if ( repeats && repeats > 1 ) {
                 expr = this.makeBugCompliant( expr, selector, index );
             }
@@ -1067,7 +1040,6 @@ define( function( require, exports, module ) {
             } )
             .then( function( typeValid ) {
                 var exprValid = ( typeof expr !== 'undefined' && expr !== null && expr.length > 0 ) ? that.model.evaluate( expr, 'boolean', that.originalSelector, that.index ) : true;
-
                 return ( typeValid && exprValid );
             } );
     };
