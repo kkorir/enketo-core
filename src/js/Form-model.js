@@ -665,8 +665,7 @@ define( function( require, exports, module ) {
     };
 
     /**
-     * Evaluates an XPath Expression with available XPath evaluators, including
-     * javarosa extensions.
+     * Evaluates an XPath Expression using XPathJS_javarosa (not native XPath 1.0 evaluator)
      *
      * This function does not seem to work properly for nodeset resulttypes otherwise:
      * muliple nodes can be accessed by returned node.snapshotItem(i)(.textContent)
@@ -768,7 +767,7 @@ define( function( require, exports, module ) {
             }
         }
 
-        // if that didn't work, try the slower custom XPath JS evaluator
+        // if that didn't work, try the slow XPathJS evaluator 
         if ( !result ) {
             try {
                 if ( typeof doc.jsEvaluate === 'undefined' ) {
