@@ -105,12 +105,9 @@ module.exports = function( grunt ) {
                 files: {
                     'build/js/enketo-bundle.js': [ 'app.js' ]
                 },
-                options: {
-                    alias: {
-                        'text!enketo-config': './config.json',
-                        'widgets': './src/js/widgets.js',
-                    },
-                },
+            },
+            options: {
+                alias: {},
             },
         },
         uglify: {
