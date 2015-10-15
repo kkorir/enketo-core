@@ -8,8 +8,9 @@ define( function( require, exports, module ) {
     var MergeXML = require( 'mergexml/mergexml' );
     var utils = require( './utils' );
     var $ = require( 'jquery' );
-    var Promise = require( 'lie' );
-    var FormLogicError = require( './Form-logic-error' );
+    var FormLogicError = require( './FormLogicError' );
+    var ExtendedXpathEvaluator = require( 'extended-xpath' );
+    var openrosa_xpath_extensions = require( 'openrosa-xpath-extensions' );
     require( './plugins' );
     require( './extend' );
     require( 'jquery-xpath-basic' );
@@ -285,7 +286,7 @@ define( function( require, exports, module ) {
      * Creates a custom XPath Evaluator to be used for XPath Expresssions that contain custom
      * OpenRosa functions or for browsers that do not have a native evaluator.
      */
-    FormModel.prototype.bindJsEvaluator = require( './xpath-evaluator-binding' );
+    FormModel.prototype.bindJsEvaluator = require( './XPathEvaluatorBinding' );
 
     /**
      * Gets the instance ID
@@ -564,6 +565,7 @@ define( function( require, exports, module ) {
      */
     FormModel.prototype.replaceIndexedRepeatFn = function( expr, selector, index ) {
         var that = this;
+        var error;
         var indexedRepeats = utils.parseFunctionFromExpression( expr, 'indexed-repeat' );
 
         if ( !indexedRepeats.length ) {
@@ -599,6 +601,7 @@ define( function( require, exports, module ) {
 
     FormModel.prototype.replacePullDataFn = function( expr, selector, index ) {
         var that = this;
+        var error;
         var pullDatas = utils.parseFunctionFromExpression( expr, 'pulldata' );
 
         if ( !pullDatas.length ) {
@@ -652,7 +655,7 @@ define( function( require, exports, module ) {
      * @return { ?(number|string|boolean|Array<element>) } the result
      */
     FormModel.prototype.evaluate = function( expr, resTypeStr, selector, index, tryNative ) {
-        var j, context, doc, resTypeNum, resultTypes, result, $collection, response, repeats, cacheKey, original, cacheable;
+        var j, error, context, doc, resTypeNum, resultTypes, result, $collection, response, repeats, cacheKey, original, cacheable;
 
         // console.debug( 'evaluating expr: ' + expr + ' with context selector: ' + selector + ', 0-based index: ' +
         //    index + ' and result type: ' + resTypeStr );
@@ -1037,7 +1040,6 @@ define( function( require, exports, module ) {
             } )
             .then( function( typeValid ) {
                 var exprValid = ( typeof expr !== 'undefined' && expr !== null && expr.length > 0 ) ? that.model.evaluate( expr, 'boolean', that.originalSelector, that.index ) : true;
-
                 return ( typeValid && exprValid );
             } );
     };
