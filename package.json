@@ -54,7 +54,7 @@
     "dependencies": {
         "bootstrap-datepicker": "1.4.x",
         "bootstrap-slider-basic": "3.2.x",
-        "bootstrap-timepicker": "git://github.com/jdewit/bootstrap-timepicker.git#30c1d66475d315dea9446afa5ea73eb2c99e2b70",
+        "bootstrap-timepicker": "0.2.x",
         "enketo-xpathjs": "1.2.x",
         "jquery": "2.1.x",
         "jquery-touchswipe": "1.6.x",
