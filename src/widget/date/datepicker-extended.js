@@ -179,8 +179,26 @@ define( function( require, exports, module ) {
              * webview: "Mozilla/5.0 (Linux; U; Android 4.1.2; en-us; GT-P3100 Build/JZO54K) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Safari/534.30"
              */
 
-            if ( !data && typeof options === 'object' && ( !options.touch || !support.inputtypes.date || badSamsung.test( navigator.userAgent ) ) ) {
-                $this.data( pluginName, ( data = new DatepickerExtended( this, options, event ) ) );
+            if ( !data && typeof options === 'object') {
+                if( !options.touch || !support.inputtypes.date || badSamsung.test( navigator.userAgent ) ) {
+                    $this.data( pluginName, ( data = new DatepickerExtended( this, options, event ) ) );
+                } else {
+                    // Here we add a refresh button to work around an Android browser
+                    // bug present on some phones (so far: Tecno Y4, Tecno H5).  If the
+                    // native datepicker is cancelled using the hardware back button,
+                    // the datepicker will no longer fire when clicking the date field
+                    // on these devices.  This code adds a refresh button, which should
+                    // allow continued service on these devices.
+                    var $refresh = $( '<i class="fa fa-undo date-refresh">' );
+                    $this.after( $refresh );
+                    $refresh.on( 'click', function() {
+                        var $parent = $this.parent();
+                        $parent.hide();
+                        setTimeout( function() {
+                            $parent.show();
+                        } );
+                    } );
+                }
             }
             //only call method if widget was instantiated before
             else if ( data && typeof options === 'string' ) {
