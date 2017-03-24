@@ -43,6 +43,7 @@ define( function( require, exports, module ) {
                     case 'url':
                     case 'email':
                     case 'password':
+                    case 'tel':
                     case 'text':
                     case 'file':
                         $node.removeAttr( 'data-previous-file-name data-loaded-file-name' );
