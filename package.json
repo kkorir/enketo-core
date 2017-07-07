@@ -1,5 +1,5 @@
 {
-    "name": "enketo-core",
+    "name": "@medic/enketo-core",
     "description": "Extensible Enketo core containing the form logic engine and responsive form styling",
     "homepage": "https://enketo.org",
     "version": "4.27.2",
