@@ -1065,7 +1065,7 @@ FormModel.prototype.replaceItextFn = function( expr ) {
     // TODO: would be more consistent to use utls.parseFunctionFromExpression() and utils.stripQuotes
     return expr.replace( ITEXT, function( match, id ) {
         // TODO include currentLang() here
-        return '/model/itext/translation[@id="' + id + '"]/value';
+        return '/model/itext/translation/text[@id=' + id + ']/value';
     } );
 };
 
