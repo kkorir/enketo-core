@@ -1050,6 +1050,25 @@ FormModel.prototype.replaceInstanceFn = function( expr ) {
 };
 
 /** 
+ * Replace jr:itext('id') with an absolute path
+ * Doing this here instead of adding a jr:itext() function to the XPath evaluator, means we can keep using
+ * the much faster native evaluator in most cases!
+ *
+ * @param  {string} expr original expression
+ * @return {string}      new expression
+ */
+FormModel.prototype.replaceItextFn = function( expr ) {
+    var prefix;
+    var that = this;
+
+    // TODO: would be more consistent to use utls.parseFunctionFromExpression() and utils.stripQuotes
+    return expr.replace( ITEXT, function( match, id ) {
+        // TODO include currentLang() here
+        return '/model/itext/translation[@id="' + id + '"]/value';
+    } );
+};
+
+/** 
  * Replaces current() with /absolute/path/to/node to ensure the context is shifted to the primary instance
  * 
  * Doing this here instead of adding a current() function to the XPath evaluator, means we can keep using
@@ -1220,6 +1239,7 @@ FormModel.prototype.evaluate = function( expr, resTypeStr, selector, index, tryN
         expr = expr;
         expr = expr.trim();
         expr = this.replaceInstanceFn( expr );
+        expr = this.replaceItextFn( expr );
         expr = this.replaceCurrentFn( expr, selector );
         // shiftRoot should come after replaceCurrentFn
         expr = this.shiftRoot( expr );
