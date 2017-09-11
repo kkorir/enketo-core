@@ -1049,7 +1049,7 @@ FormModel.prototype.replaceInstanceFn = function( expr ) {
     } );
 };
 
-/** 
+/**
  * Replace jr:itext('id') with an absolute path
  * Doing this here instead of adding a jr:itext() function to the XPath evaluator, means we can keep using
  * the much faster native evaluator in most cases!
