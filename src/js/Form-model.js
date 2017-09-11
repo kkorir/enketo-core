@@ -10,6 +10,7 @@ var config = require( 'enketo-config' );
 var types = require( './types' );
 var REPEAT_COMMENT_PREFIX = 'repeat:/';
 var INSTANCE = /instance\([\'|\"]([^\/:\s]+)[\'|\"]\)/g;
+var ITEXT = /jr:itext\(\s*((?:'[^']*')|(?:"[^"]*"))\s*\)/g;
 var OPENROSA = /(decimal-date-time\(|pow\(|indexed-repeat\(|format-date\(|coalesce\(|join\(|max\(|min\(|random\(|substr\(|int\(|uuid\(|regex\(|now\(|today\(|date\(|if\(|boolean-from-string\(|checklist\(|selected\(|selected-at\(|round\(|area\(|position\([^\)])/;
 var OPENROSA_XFORMS_NS = 'http://openrosa.org/xforms';
 var JAVAROSA_XFORMS_NS = 'http://openrosa.org/javarosa';
